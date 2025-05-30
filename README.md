@@ -146,3 +146,95 @@ Authenticate an existing user.
 
 - email (valid email format)
 - password (minimum 6 characters)
+### Get User Profile
+Get the authenticated user's profile information.
+
+**URL**: `/user/profile`
+
+**Method**: `GET`
+
+**Headers**:
+```json
+{
+  "Authorization": "Bearer jwt_token_string"
+}
+```
+
+**Success Response**:
+- **Code**: 200 OK
+- **Content**:
+```json
+{
+  "fullname": {
+    "firstname": "string",
+    "lastname": "string"
+  },
+  "email": "string",
+  "_id": "string"
+  // other user fields
+}
+```
+
+**Error Responses**:
+- **Code**: 401 Unauthorized
+  - **Content**: Authentication error
+```json
+{
+  "message": "Access denied. No token provided"
+}
+```
+
+- **Code**: 500 Internal Server Error
+  - **Content**: Server error message
+```json
+{
+  "message": "Something went wrong",
+  "error": "error message"
+}
+```
+
+### Logout User
+Logout the currently authenticated user and invalidate their token.
+
+**URL**: `/user/logout`
+
+**Method**: `GET`
+
+**Headers**:
+```json
+{
+  "Authorization": "Bearer jwt_token_string"
+}
+```
+
+**Success Response**:
+- **Code**: 200 OK
+- **Content**:
+```json
+{
+  "message": "Logout successfully"
+}
+```
+
+**Error Responses**:
+- **Code**: 401 Unauthorized
+  - **Content**: Authentication error
+```json
+{
+  "message": "Access denied. No token provided"
+}
+```
+
+- **Code**: 500 Internal Server Error
+  - **Content**: Server error message
+```json
+{
+  "message": "Something went wrong",
+  "error": "error message"
+}
+```
+
+**Notes**:
+- Both endpoints require authentication
+- The token will be blacklisted after logout and cannot be reused
+- The token can be provided either through cookies or Authorization header

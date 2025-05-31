@@ -238,3 +238,100 @@ Logout the currently authenticated user and invalidate their token.
 - Both endpoints require authentication
 - The token will be blacklisted after logout and cannot be reused
 - The token can be provided either through cookies or Authorization header
+### Register Captain
+Create a new captain account.
+
+**URL**: `/captain/register`
+
+**Method**: `POST`
+
+**Request Body**:
+```json
+{
+  "fullname": {
+    "firstname": "string",  // minimum 3 characters
+    "lastname": "string"    // optional, minimum 3 characters if provided
+  },
+  "email": "string",        // valid email format
+  "password": "string",     // minimum 6 characters
+  "vehicle": {
+    "color": "string",      // minimum 3 characters
+    "plate": "string",      // minimum 3 characters
+    "capacity": "number",   // minimum 1
+    "vehicleType": "string" // must be "car", "motorcycle", or "auto"
+  },
+  "location": {             // optional
+    "lat": "number",
+    "lng": "number"
+  }
+}
+```
+
+**Success Response**:
+- **Code**: 201 Created
+- **Content**:
+```json
+{
+  "token": "jwt_token_string",
+  "captain": {
+    "fullname": {
+      "firstname": "string",
+      "lastname": "string"
+    },
+    "email": "string",
+    "vehicle": {
+      "color": "string",
+      "plate": "string",
+      "capacity": "number",
+      "vehicleType": "string"
+    },
+    "status": "inactive",
+    "_id": "string"
+  }
+}
+```
+
+**Error Responses**:
+
+- **Code**: 400 Bad Request
+  - **Content**: Validation errors for invalid input
+```json
+{
+  "errors": [
+    {
+      "msg": "First name must be greater than 3 characters",
+      "path": "fullname.firstname"
+    }
+  ]
+}
+```
+
+- **Code**: 401 Unauthorized
+  - **Content**: Email already exists
+```json
+{
+  "message": "Captain already exists with this email"
+}
+```
+
+- **Code**: 500 Internal Server Error
+  - **Content**: Server error message
+```json
+{
+  "message": "Something went wrong",
+  "error": "error message"
+}
+```
+
+**Required Fields**:
+- firstname (minimum 3 characters)
+- email (valid email format)
+- password (minimum 6 characters)
+- vehicle.color (minimum 3 characters)
+- vehicle.plate (minimum 3 characters)
+- vehicle.capacity (minimum 1)
+- vehicle.vehicleType (must be "car", "motorcycle", or "auto")
+
+**Optional Fields**:
+- lastname (minimum 3 characters if provided)
+- location (must include both lat and lng if provided)
